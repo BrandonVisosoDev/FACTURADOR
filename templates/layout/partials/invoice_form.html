@@ -1,7 +1,7 @@
 {% load static %}
-{% extends 'base.html' %}
+{% extends 'header.html' %}
 {% block content %}
-<main class="invoice">
+
   <form class="invoice-form" method="post" novalidate>
     {% csrf_token %}
 
@@ -63,6 +63,6 @@
 
     <!-- Aquí seguirán los siguientes bloques (productos, resumen, acciones) -->
   </form>
-</main>
+
 {% endblock %}
     

@@ -1,0 +1,11 @@
+{% load static %}
+{% extends 'header.html' %}
+
+{% block content %}
+  {% include 'layout/partials/header.html' %}
+  <main class="invoice">
+    {% include 'layout/partials/invoice_form.html' %}
+    {% include 'layout/partials/products.html' %}
+    {% include 'layout/partials/summary.html' %}
+  </main>
+{% endblock %}
