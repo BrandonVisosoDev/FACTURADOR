@@ -1,0 +1,114 @@
+<!--Cargamos los estaticos-->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--Cargamos Normalize-->
+    <link rel="stylesheet" href="{% static 'normalize/normalize.css' %}">
+
+    <!--Cargamos nuestra hoja de estilos-->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <title>EDELYX_FACTURADOR</title>
+
+    
+
+</head>
+<body>
+
+    
+<!-- Bloque 3: Resumen y totales (HTML corregido y listo para integrar) -->
+<section class="resumen-container" id="resumen-block" aria-labelledby="resumen-title">
+  <div class="resumen-header">
+    <h2 id="resumen-title">Resumen de la factura</h2>
+  </div>
+
+  <form id="resumen-form" class="resumen-form" action="javascript:void(0);" novalidate>
+    {% csrf_token %}
+
+    <div class="field">
+      <label for="impuesto_cobrar">Impuesto a cobrar (%)</label>
+      <input id="impuesto_cobrar" name="impuesto_cobrar" type="number" step="0.01" min="0" value="0.00" placeholder="0.00" required />
+    </div>
+
+    <div class="field">
+      <label for="descuento_realizar">Descuento a aplicar (monto)</label>
+      <input id="descuento_realizar" name="descuento_realizar" type="number" step="0.01" min="0" value="0.00" placeholder="0.00" required />
+    </div>
+
+    <div class="field">
+      <button type="button" id="btn-mostrar-resumen" class="btn-primary">Mostrar Resumen</button>
+    </div>
+  </form>
+
+  <div class="resumen-tables" aria-live="polite">
+    <!-- Tabla de productos / resumen (se llenará dinámicamente) -->
+    <table class="resumen-table" id="resumen-tabla" aria-describedby="resumen-title">
+      <thead>
+        <tr>
+          <th>Artículo</th>
+          <th>Cantidad</th>
+          <th>Precio unitario</th>
+          <th>Impuesto</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody id="resumen-body">
+        <!-- Filas generadas por JS -->
+      </tbody>
+      <tfoot>
+        <tr class="total-line">
+          <th colspan="4" class="text-right">Subtotal:</th>
+          <td id="resumen-subtotal">0.00</td>
+        </tr>
+        <tr class="total-line">
+          <th colspan="4" class="text-right">Impuestos:</th>
+          <td id="resumen-impuestos">0.00</td>
+        </tr>
+        <tr class="total-line">
+          <th colspan="4" class="text-right">Descuento:</th>
+          <td id="resumen-descuento">0.00</td>
+        </tr>
+        <tr class="total-line total-final">
+          <th colspan="4" class="text-right">Total:</th>
+          <td id="resumen-total">0.00</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <!-- Tarjetas de totales (resumen visual) -->
+    <div class="totales-aside" role="region" aria-label="Totales de la factura">
+      <div class="total-card">
+        <p class="total-label">Subtotal</p>
+        <p class="total-valor" id="total-sub">0.00</p>
+      </div>
+      <div class="total-card total-tax">
+        <p class="total-label">Impuestos</p>
+        <p class="total-valor" id="total-imp">0.00</p>
+      </div>
+      <div class="total-card total-amount">
+        <p class="total-label">Total</p>
+        <p class="total-valor" id="total-amount">0.00</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botones de acción -->
+  <div class="resumen-actions" role="group" aria-label="Acciones de la factura">
+    <button type="button" class="btn-secondary" id="btn-generar">Generar Factura</button>
+    <button type="button" class="btn-secondary" id="btn-imprimir">Imprimir Factura</button>
+    <button type="button" class="btn-secondary" id="btn-limpiar">Limpiar Todo</button>
+  </div>
+</section>
+
+
+
+
+    
+</body>
+</html>

@@ -367,3 +367,221 @@ input[type="date"]{
     padding: 0.7rem 0.8rem;
   }
 }
+
+/* Bloque 3 — CSS final para Resumen y Totales (listo para integrar) */
+
+.resumen-container {
+  max-width: 760px;
+  margin: 3.2rem auto;
+  padding: 2.0rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.55);
+  color: var(--color-texto);
+  box-sizing: border-box;
+}
+
+/* Cabecera */
+.resumen-header {
+  margin-bottom: 1.2rem;
+}
+.resumen-header h2 {
+  margin: 0;
+  text-align: center;
+  font-size: 2.0rem;
+  letter-spacing: 0.04rem;
+  color: var(--color-texto);
+}
+
+/* Formulario interno: columna única */
+.resumen-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 1.6rem;
+}
+
+/* Reusar .field global para consistencia */
+.resumen-container .field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.resumen-container .field label {
+  font-size: 1.2rem;
+  color: rgba(248,249,250,0.85);
+}
+.resumen-container .field input {
+  background: var(--color-inputs);
+  color: var(--color-texto);
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 0.9rem 1.2rem;
+  border-radius: 6px;
+  font-size: 1.4rem;
+  outline: none;
+  transition: box-shadow .15s ease, border-color .15s ease;
+}
+.resumen-container .field input:focus {
+  box-shadow: 0 8px 20px rgba(46,163,255,0.06);
+  border-color: rgba(46,163,255,0.18);
+}
+
+/* Botón Mostrar Resumen (coincide con estilo fijo global) */
+#btn-mostrar-resumen,
+.resumen-actions .btn-secondary {
+  --btn-padding-y: 10px;
+  --btn-padding-x: 22px;
+  display: inline-block;
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  border: 2px solid #fefefe;
+  text-transform: uppercase;
+  color: #fefefe;
+  background-color: #212121;
+  font-weight: 600;
+  font-size: 1.4rem;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: none;
+  position: relative;
+  z-index: 1;
+}
+#btn-mostrar-resumen:active,
+.resumen-actions .btn-secondary:active {
+  transform: translateY(1px);
+}
+
+/* Tabla de resumen: compacta y legible */
+.resumen-tables {
+  margin-top: 1rem;
+}
+.resumen-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background: rgba(255,255,255,0.01);
+  border-radius: 6px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.resumen-table thead {
+  background: rgba(255,255,255,0.02);
+}
+.resumen-table th,
+.resumen-table td {
+  padding: 0.9rem 1rem;
+  text-align: left;
+  font-size: 1.4rem;
+  color: var(--color-texto);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.resumen-table thead th {
+  font-weight: 600;
+  font-size: 1.3rem;
+}
+.resumen-table tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.005);
+}
+.resumen-table tfoot .total-line th,
+.resumen-table tfoot .total-line td {
+  font-weight: 600;
+  font-size: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  padding-top: 1rem;
+}
+.resumen-table tfoot .total-final td {
+  color: var(--color-accent, #2EA3FF);
+  font-size: 1.6rem;
+}
+
+/* Tarjetas de totales (aside visual) */
+.totales-aside {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.2rem;
+  align-items: stretch;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+.total-card {
+  flex: 1 1 0;
+  padding: 1rem;
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+  border: 1px solid rgba(255,255,255,0.02);
+  text-align: center;
+  min-width: 0;
+}
+.total-card .total-label {
+  margin: 0;
+  font-size: 1.2rem;
+  color: rgba(248,249,250,0.8);
+}
+.total-card .total-valor {
+  margin: 0.4rem 0 0 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-texto);
+}
+
+/* Distintivos de color para tarjetas */
+.total-card.total-tax { border-left: 4px solid rgba(46,163,255,0.12); }
+.total-card.total-amount { border-left: 4px solid var(--color-accent, #2EA3FF); }
+
+/* Acciones: botones alineados a la derecha */
+.resumen-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.6rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* Accesibilidad y estados */
+[aria-live] { outline: none; }
+.resumen-table td[role="status"] {
+  font-weight: 600;
+}
+
+/* Responsive: ajustar en pantallas pequeñas */
+@media (max-width: 900px) {
+  .resumen-container {
+    margin: 1.6rem;
+    padding: 1.4rem;
+  }
+  .totales-aside {
+    flex-direction: column;
+  }
+  .resumen-actions {
+    justify-content: center;
+  }
+  #btn-mostrar-resumen,
+  .resumen-actions .btn-secondary {
+    width: 100%;
+  }
+  .resumen-table th,
+  .resumen-table td {
+    font-size: 1.2rem;
+    padding: 0.7rem 0.8rem;
+  }
+}
+
+/* Pequeños ajustes para impresión */
+@media print {
+  .resumen-actions,
+  #btn-mostrar-resumen {
+    display: none !important;
+  }
+  .resumen-container {
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    margin: 0;
+    padding: 0;
+  }
+  .resumen-table th,
+  .resumen-table td {
+    color: #000;
+  }
+}
