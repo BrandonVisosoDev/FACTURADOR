@@ -26,7 +26,8 @@ body{
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Layout container */
+/* Estilos para INVOICE */
+
 .invoice{
   max-width: var(--max-width);
   margin: 3.2rem auto;
@@ -195,7 +196,7 @@ input[type="date"]{
 
 
 
-/* Bloque 2 — Estilos para sección de productos (una columna, título centrado, campos y botón animado) */
+/* ESTILOS PARA PRODUCTS */
 
 .productos {
   max-width: 760px;
@@ -351,7 +352,8 @@ input[type="date"]{
   background: rgba(255,107,107,0.06);
 }
 
-/* Responsive: ajustar ancho y espaciado en pantallas pequeñas */
+/* RESPONSIVE */
+
 @media (max-width: 640px) {
   .productos {
     margin: 1.6rem;
@@ -368,7 +370,7 @@ input[type="date"]{
   }
 }
 
-/* Bloque 3 — CSS final para Resumen y Totales (listo para integrar) */
+/* ESTILOS SUMMARY */
 
 .resumen-container {
   max-width: 760px;
@@ -544,7 +546,8 @@ input[type="date"]{
   font-weight: 600;
 }
 
-/* Responsive: ajustar en pantallas pequeñas */
+/* RESPONSIVE */
+
 @media (max-width: 900px) {
   .resumen-container {
     margin: 1.6rem;
@@ -567,7 +570,8 @@ input[type="date"]{
   }
 }
 
-/* Pequeños ajustes para impresión */
+/* PEQUEÑOS AJUSTES PARA IMPRESIÓN */
+
 @media print {
   .resumen-actions,
   #btn-mostrar-resumen {
@@ -586,7 +590,8 @@ input[type="date"]{
   }
 }
 
-/* Footer styles */
+/* FOOTER STYLES */
+
 .site-footer{
   background-color: var(--color-bg);
   color: var(--color-text);
@@ -616,7 +621,8 @@ input[type="date"]{
   font-weight: 600;
 }
 
-/* Accesibilidad y responsividad */
+/* ACCESIBILIDAD Y RESPONSIVIDAD */
+
 @media (prefers-contrast: high){
   .site-footer{ border-top-color: rgba(255,255,255,0.12); }
   .footer-text{ color: var(--color-text); }
