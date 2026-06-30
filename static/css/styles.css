@@ -193,7 +193,7 @@ input[type="date"]{
 }
 
 
-/* Parte 2 */
+
 
 /* Bloque 2 — Estilos para sección de productos (una columna, título centrado, campos y botón animado) */
 
@@ -272,55 +272,46 @@ input[type="date"]{
 }
 
 /* Pseudo capas para la animación (simplificada y útil) */
+/* Botón fijo: eliminar animaciones y mantener texto estático */
+.producto-form .field button {
+  --btn-padding-y: 12px;
+  --btn-padding-x: 28px;
+  position: relative;
+  display: inline-block;
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  border: 2px solid #fefefe;
+  text-transform: uppercase;
+  color: #fefefe;
+  background-color: #212121;
+  font-weight: 600;
+  font-size: 1.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  overflow: hidden;
+  z-index: 1;
+  transition: none; /* quitar transiciones */
+}
+
+/* Quitar pseudo-elementos animados */
 .producto-form .field button::before,
 .producto-form .field button::after {
-  content: '';
-  position: absolute;
-  background-color: #121212;
-  z-index: 0;
-  transition: transform .35s ease;
+  display: none;
 }
 
-/* horizontal cover (top/bottom effect) */
-.producto-form .field button::before {
-  top: 6px;
-  left: -2px;
-  width: calc(100% + 4px);
-  height: calc(100% - 12px);
-  transform-origin: top;
-  transform: scaleY(1);
-}
-
-/* vertical cover (left/right effect) */
-.producto-form .field button::after {
-  left: 6px;
-  top: -2px;
-  height: calc(100% + 4px);
-  width: calc(100% - 12px);
-  transform-origin: left;
-  transform: scaleX(1);
-  transition-delay: 0.18s;
-}
-
-/* Hover: revelar el fondo animado */
-.producto-form .field button:hover::before {
-  transform: scaleY(0);
-}
-.producto-form .field button:hover::after {
-  transform: scaleX(0);
-}
-
-/* Asegurar que el texto quede por encima de las pseudo-capas */
+/* Asegurar que el texto permanezca estático y visible */
 .producto-form .field button span,
 .producto-form .field button {
   position: relative;
   z-index: 2;
+  transition: none;
 }
 
-/* Pequeño efecto al presionar */
+/* Pequeño efecto al presionar (opcional, no animado) */
 .producto-form .field button:active {
-  transform: translateY(1px) scale(0.998);
+  transform: translateY(1px);
+  transition: none;
 }
+
 
 /* Tabla de productos: compacta y legible */
 .productos-table {
