@@ -191,3 +191,188 @@ input[type="date"]{
   .invoice-title{ font-size: 2rem; }
   .field{ margin-bottom: 1rem; }
 }
+
+
+/* Parte 2 */
+
+/* Bloque 2 — Estilos para sección de productos (una columna, título centrado, campos y botón animado) */
+
+.productos {
+  max-width: 760px;
+  margin: 3.2rem auto;
+  padding: 2.0rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.55);
+}
+
+/* Título centrado y destacado */
+.productos > h2 {
+  margin: 0 0 1.6rem 0;
+  text-align: center;
+  font-size: 2.0rem;
+  letter-spacing: 0.06rem;
+  color: var(--color-texto);
+}
+
+/* Formulario: columna única, campos bien espaciados */
+.producto-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.0rem;
+  margin-bottom: 1.6rem;
+}
+
+/* Reusar .field del global; asegurar apariencia consistente */
+.producto-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.producto-form .field label {
+  font-size: 1.2rem;
+  color: rgba(248,249,250,0.85);
+}
+.producto-form .field input {
+  background: var(--color-inputs);
+  color: var(--color-texto);
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 0.9rem 1.2rem;
+  border-radius: 6px;
+  font-size: 1.4rem;
+  outline: none;
+  transition: box-shadow .15s ease, border-color .15s ease, transform .08s ease;
+}
+.producto-form .field input:focus {
+  box-shadow: 0 8px 20px rgba(46,163,255,0.06);
+  border-color: rgba(46,163,255,0.18);
+  transform: translateY(-1px);
+}
+
+/* Botón: estilo inspirado en el snippet animado (solo lo útil) */
+.producto-form .field button,
+.productos .btn {
+  --btn-padding-y: 12px;
+  --btn-padding-x: 28px;
+  position: relative;
+  display: inline-block;
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  border: 2px solid #fefefe;
+  text-transform: uppercase;
+  color: #fefefe;
+  background-color: #212121;
+  font-weight: 600;
+  font-size: 1.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  overflow: hidden;
+  z-index: 1;
+  transition: color .25s ease, transform .08s ease;
+}
+
+/* Pseudo capas para la animación (simplificada y útil) */
+.producto-form .field button::before,
+.producto-form .field button::after {
+  content: '';
+  position: absolute;
+  background-color: #121212;
+  z-index: 0;
+  transition: transform .35s ease;
+}
+
+/* horizontal cover (top/bottom effect) */
+.producto-form .field button::before {
+  top: 6px;
+  left: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% - 12px);
+  transform-origin: top;
+  transform: scaleY(1);
+}
+
+/* vertical cover (left/right effect) */
+.producto-form .field button::after {
+  left: 6px;
+  top: -2px;
+  height: calc(100% + 4px);
+  width: calc(100% - 12px);
+  transform-origin: left;
+  transform: scaleX(1);
+  transition-delay: 0.18s;
+}
+
+/* Hover: revelar el fondo animado */
+.producto-form .field button:hover::before {
+  transform: scaleY(0);
+}
+.producto-form .field button:hover::after {
+  transform: scaleX(0);
+}
+
+/* Asegurar que el texto quede por encima de las pseudo-capas */
+.producto-form .field button span,
+.producto-form .field button {
+  position: relative;
+  z-index: 2;
+}
+
+/* Pequeño efecto al presionar */
+.producto-form .field button:active {
+  transform: translateY(1px) scale(0.998);
+}
+
+/* Tabla de productos: compacta y legible */
+.productos-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.2rem;
+  background: rgba(255,255,255,0.01);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.productos-table thead {
+  background: rgba(255,255,255,0.02);
+}
+.productos-table th,
+.productos-table td {
+  padding: 0.9rem 1.0rem;
+  text-align: left;
+  font-size: 1.4rem;
+  color: var(--color-texto);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.productos-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Botones de acción en la tabla */
+.remove-item {
+  background: transparent;
+  color: #ff6b6b;
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 0.45rem 0.8rem;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.remove-item:hover {
+  background: rgba(255,107,107,0.06);
+}
+
+/* Responsive: ajustar ancho y espaciado en pantallas pequeñas */
+@media (max-width: 640px) {
+  .productos {
+    margin: 1.6rem;
+    padding: 1.2rem;
+  }
+  .producto-form .field button {
+    width: 100%;
+    text-align: center;
+  }
+  .productos-table th,
+  .productos-table td {
+    font-size: 1.2rem;
+    padding: 0.7rem 0.8rem;
+  }
+}

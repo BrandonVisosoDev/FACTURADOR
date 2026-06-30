@@ -1,11 +1,95 @@
+<!--Cargamos los estaticos-->
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--Cargamos Normalize-->
+    <link rel="stylesheet" href="{% static 'normalize/normalize.css' %}">
+
+    <!--Cargamos nuestra hoja de estilos-->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
     <title>EDELYX_FACTURADOR</title>
+
+    
+
 </head>
 <body>
+
+   <!-- Bloque 2: Ingresar producto y tabla (componente independiente) -->
+<section class="productos" id="productos-block">
+  <h2>Ingresar Producto</h2>
+
+  <form id="producto-form" class="producto-form" method="post" action="">
+    {% csrf_token %}
+
+    <div class="field">
+      <label for="producto_name">Nombre del artículo</label>
+      <input id="producto_name" name="producto_name" type="text" placeholder="Nombre del artículo" required />
+    </div>
+
+    <div class="field">
+      <label for="producto_cantidad">Cantidad</label>
+      <input id="producto_cantidad" name="producto_cantidad" type="number" min="1" value="1" required />
+    </div>
+
+    <div class="field">
+      <label for="producto_precio">Precio unitario</label>
+      <input id="producto_precio" name="producto_precio" type="number" step="0.01" min="0" placeholder="0.00" required />
+    </div>
+
+    <div class="field">
+      <label for="producto_impuesto">Impuesto %</label>
+      <input id="producto_impuesto" name="producto_impuesto" type="number" step="0.01" min="0" value="0.00" />
+    </div>
+
+    <div class="field">
+      <button type="button" id="agregar_producto">Agregar Producto</button>
+    </div>
+  </form>
+
+  <table class="productos-table" aria-describedby="productos-block">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre del artículo</th>
+        <th>Cantidad</th>
+        <th>Precio unitario</th>
+        <th>Impuesto</th>
+        <th>Subtotal</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="productos_body">
+      <!-- Ejemplo de filas; las filas reales se insertarán dinámicamente -->
+      <tr>
+        <td>1</td>
+        <td>Producto 1</td>
+        <td>1</td>
+        <td>100.00</td>
+        <td>16.00</td>
+        <td>116.00</td>
+        <td><button type="button" class="remove-item">Eliminar</button></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Producto 2</td>
+        <td>2</td>
+        <td>50.00</td>
+        <td>8.00</td>
+        <td>108.00</td>
+        <td><button type="button" class="remove-item">Eliminar</button></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
     
 </body>
 </html>
