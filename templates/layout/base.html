@@ -1,28 +1,28 @@
-<!--Cargamos los estaticos-->
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Normalize -->
+  <link rel="stylesheet" href="{% static 'normalize/normalize.css' %}">
 
-    <!--Cargamos Normalize-->
-    <link rel="stylesheet" href="{% static 'normalize/normalize.css' %}">
+  <!-- Estilos principales -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
-    <!--Cargamos nuestra hoja de estilos-->
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-
-    <title>EDELYX_FACTURADOR</title>
-
+  <title>EDELYX_FACTURADOR</title>
 </head>
-
 <body>
 
-    {% block content %}
+  {% block content %}
+  {% endblock %}
 
-    {% endblock %}
+  <!-- Incluir footer (archivo footer.html en templates/partials o similar) -->
+  {% include 'layout/partials/footer.html' %}
 
+  <!-- Scripts (si los tienes) -->
+  <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>
