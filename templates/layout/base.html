@@ -1,0 +1,28 @@
+<!--Cargamos los estaticos-->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--Cargamos Normalize-->
+    <link rel="stylesheet" href="{% static 'normalize/normalize.css' %}">
+
+    <!--Cargamos nuestra hoja de estilos-->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <title>EDELYX_FACTURADOR</title>
+
+</head>
+
+<body>
+
+    {% block content %}
+
+    {% endblock %}
+
+</body>
+</html>
