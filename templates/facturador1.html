@@ -19,40 +19,78 @@
 </head>
 <body>
 
-    <div class = "columna1">
 
+<main class="invoice">
+  <form class="invoice-form" method="post" novalidate>
+    {% csrf_token %}
 
-        <img src="{% static 'img/logo.png' %}" alt="Logo_Edelyx">
+    <!-- Header / Logo -->
+    <header class="invoice-header">
+      <img src="{% static 'img/logo.png' %}" alt="Logo Edelyx" class="invoice-logo" />
+    </header>
 
-        <p>Emisor:</p>
-        <input type="text">
+    <!-- Contenedor principal con columnas izquierda y derecha -->
+    <div class="invoice-grid">
+      <!-- Columna izquierda: Emisor / Cliente / Envío -->
+      <section class="columna columna-left" aria-labelledby="datos-emisor">
+        <h2 id="datos-emisor" class="visually-hidden">Datos del emisor y cliente</h2>
 
-        <p>Cobrar a:</p>
-        <input type="text">
-
-        <p>Enviar a:</p>
-        <input type="text">
-        
-        <div class="columna2">
-
-            <h1>FACTURA</h1>
-
-            <p>Numero de Factura:</p>
-            <input type="text">
-
-            <p>Fecha Actual:</p>
-            <input type="date">
-
-            <p>Fecha de Vencimiento:</p>
-            <input type="date">
-
-            <p>Condicion de Pago:</p>
-            <input type="text">
-            
+        <div class="field">
+          <label for="emisor_name">Emisor</label>
+          <input id="emisor_name" name="emisor_name" type="text" placeholder="Nombre del emisor" />
         </div>
-        
+
+        <div class="field">
+          <label for="cobrar_a">Cobrar a (Cliente)</label>
+          <input id="cobrar_a" name="cobrar_a" type="text" placeholder="Nombre del cliente" />
+        </div>
+
+        <div class="field">
+          <label for="enviar_a">Enviar a (Dirección / Email)</label>
+          <input id="enviar_a" name="enviar_a" type="text" placeholder="Dirección o email de envío" />
+        </div>
+
+        <div class="field">
+          <label for="cliente_email">Email del cliente</label>
+          <input id="cliente_email" name="cliente_email" type="email" placeholder="cliente@ejemplo.com" />
+        </div>
+      </section>
+
+      <!-- Columna derecha: Metadatos de la factura -->
+      <section class="columna columna-right" aria-labelledby="datos-factura">
+        <h2 id="datos-factura" class="visually-hidden">Metadatos de la factura</h2>
+
+        <h1 class="invoice-title">FACTURA</h1>
+
+        <div class="field">
+          <label for="invoice_number">Número de factura</label>
+          <input id="invoice_number" name="invoice_number" type="text" placeholder="F-0001" />
+        </div>
+
+        <div class="field">
+          <label for="date_issued">Fecha actual</label>
+          <input id="date_issued" name="date_issued" type="date" />
+        </div>
+
+        <div class="field">
+          <label for="due_date">Fecha de vencimiento</label>
+          <input id="due_date" name="due_date" type="date" />
+        </div>
+
+        <div class="field">
+          <label for="payment_terms">Condición de pago</label>
+          <input id="payment_terms" name="payment_terms" type="text" placeholder="Contado / 30 días" />
+        </div>
+      </section>
     </div>
 
+    <!-- Aquí seguirán los siguientes bloques (productos, resumen, acciones) -->
+  </form>
+</main>
+
+
+
+ 
     
 </body>
 </html>
