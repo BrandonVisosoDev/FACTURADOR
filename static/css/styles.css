@@ -1,0 +1,193 @@
+:root{
+  --color-background: #121212;
+  --color-texto: #F8F9FA;
+  --color-inputs: #28282B;
+  --color-accent: #2EA3FF;
+  --gap: 2.4rem;
+  --radius: 6px;
+  --max-width: 1200px;
+}
+
+/* Reset / base */
+html{
+  font-size: 62.5%;
+  box-sizing: border-box;
+}
+*, *:before, *:after{
+  box-sizing: inherit;
+}
+body{
+  margin: 0;
+  font-family: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.6rem; /* 16px */
+  background: var(--color-background);
+  color: var(--color-texto);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout container */
+.invoice{
+  max-width: var(--max-width);
+  margin: 3.2rem auto;
+  padding: 2.4rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+}
+
+/* Form wrapper */
+.invoice-form{
+  display: block;
+}
+
+/* Header / logo */
+.invoice-header{
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  margin-bottom: 2.4rem;
+}
+.invoice-logo{
+  width: 9.6rem;
+  height: auto;
+  display: block;
+  border-radius: 4px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+}
+
+/* Grid: two columns (desktop-first) */
+.invoice-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+  align-items: start;
+  margin-bottom: 2.4rem;
+}
+
+/* Column base */
+.columna{
+  background: transparent;
+  padding: 1.6rem;
+  border-radius: var(--radius);
+}
+
+/* Left column visual prominence: sits slightly higher */
+.columna-left{
+  /* left column visually a bit higher */
+  transform: translateY(-0.4rem);
+}
+
+/* Right column slightly lower than left (as requested) */
+.columna-right{
+  transform: translateY(1.2rem);
+}
+
+/* Small visual distinction between columns */
+.columna-left{
+  border: 1px solid rgba(255,255,255,0.03);
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+}
+.columna-right{
+  border: 1px solid rgba(255,255,255,0.02);
+  background: linear-gradient(180deg, rgba(255,255,255,0.005), transparent);
+}
+
+/* Titles and hidden helpers */
+.invoice-title{
+  font-size: 2.4rem;
+  letter-spacing: 0.08rem;
+  margin: 0 0 1.2rem 0;
+  color: var(--color-texto);
+}
+.visually-hidden{
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+/* Field styling */
+.field{
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+}
+.field label{
+  font-size: 1.2rem;
+  color: rgba(248,249,250,0.85);
+}
+.field input,
+.field select,
+.field textarea{
+  background: var(--color-inputs);
+  color: var(--color-texto);
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 0.9rem 1.2rem;
+  border-radius: 6px;
+  font-size: 1.4rem;
+  outline: none;
+  transition: box-shadow .15s ease, border-color .15s ease;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  box-shadow: 0 6px 18px rgba(46,163,255,0.08);
+  border-color: rgba(46,163,255,0.18);
+}
+
+/* Specific tweaks for date inputs to match theme */
+input[type="date"]{
+  padding: 0.7rem 1rem;
+}
+
+/* Compact email field */
+.field input[type="email"]{
+  letter-spacing: 0.02rem;
+}
+
+/* Make sure inputs expand to column width */
+.columna .field input,
+.columna .field select{
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Subtle separators for readability */
+.columna + .columna{
+  margin-left: 0;
+}
+
+/* Accessibility: focus visible */
+:focus{
+  outline: 3px solid rgba(46,163,255,0.12);
+  outline-offset: 2px;
+}
+
+/* Small screens: stack columns */
+@media (max-width: 900px){
+  .invoice{
+    padding: 1.6rem;
+    margin: 1.6rem;
+  }
+  .invoice-grid{
+    grid-template-columns: 1fr;
+  }
+  .columna-right{
+    transform: translateY(0.6rem);
+  }
+  .invoice-logo{
+    width: 8rem;
+  }
+}
+
+/* Very small screens: tighten spacing */
+@media (max-width: 480px){
+  :root{ --gap: 1.2rem; }
+  .invoice-header{ gap: 1rem; }
+  .invoice-title{ font-size: 2rem; }
+  .field{ margin-bottom: 1rem; }
+}
