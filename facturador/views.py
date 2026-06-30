@@ -16,4 +16,10 @@ def index(request):
 def factura(request):
     
     return render(request, 'facturador2.html')
+
+ # Renderizamos la plantilla 3
+ 
+def resumen(request):
+    
+    return render(request, 'facturador3.html')    
     
