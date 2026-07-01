@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/factura.css' %}">
+{% endblock %}
+
+{% block content %}
+<main id="invoice-print" class="invoice-print" role="document" aria-labelledby="invoice-title">
+   <!-- Header: logo y metadatos -->
+  <header class="print-header" role="banner" aria-label="Encabezado de la factura">
+    <div class="print-brand" aria-hidden="false">
+      <div class="print-logo" aria-hidden="true">
+        {% if company.logo_url %}
+          <img src="{{ company.logo_url }}" alt="{{ company.name }} logo" />
+        {% else %}
+          <span class="logo-fallback">{{ company.initials|default:"E" }}</span>
+        {% endif %}
+      </div>
+      <div class="print-company">
+        <p class="company-name">{{ company.name }}</p>
+        <p class="company-meta">{{ company.address }}</p>
+        <p class="company-meta">RUC: {{ company.ruc }}</p>
+        <p class="company-meta">{{ company.email }}</p>
+      </div>
+    </div>
+
+    <div class="print-meta" aria-labelledby="invoice-title">
+      <h1 id="invoice-title" class="sr-only">Factura</h1>
+      <p class="meta-line"><strong>Factura N°:</strong> {{ invoice.number }}</p>
+      <p class="meta-line"><strong>Año:</strong> {{ invoice.date.year }} <strong>Mes:</strong> {{ invoice.date.month }} <strong>Día:</strong> {{ invoice.date.day }}</p>
+      <p class="meta-line"><strong>Tome:</strong> {{ invoice.tome }}</p>
+      <p class="meta-line"><strong>Invoice:</strong> {{ invoice.series }}</p>
+    </div>
+  </header>
+
+  <!-- Emisor y Cliente -->
+  <section class="print-parties" aria-label="Datos de emisor y cliente">
+    <article class="emisor" aria-labelledby="emisor-title">
+      <h2 id="emisor-title" class="visually-hidden">Emisor</h2>
+      <p class="label">Emitido por</p>
+      <p class="value"><strong>{{ company.name }}</strong></p>
+      <p class="value">{{ company.address }}</p>
+      <p class="value">RUC: {{ company.ruc }}</p>
+      <p class="value">{{ company.email }}</p>
+    </article>
+
+    <article class="cliente" aria-labelledby="cliente-title">
+      <h2 id="cliente-title" class="visually-hidden">Cliente</h2>
+      <p class="label">Facturado a</p>
+      <p class="value"><strong>{{ invoice.client.name }}</strong></p>
+      <p class="value">{{ invoice.client.address }}</p>
+      <p class="value">NIT: {{ invoice.client.nit }}</p>
+      <p class="value">{{ invoice.client.email }}</p>
+    </article>
+  </section>
+
+  <!-- Tabla de productos (detalle) -->
+  <section class="print-items" aria-label="Detalle de productos">
+    <table class="items" role="table" aria-describedby="invoice-title">
+      <thead role="rowgroup">
+        <tr role="row">
+          <th role="columnheader" scope="col" class="col-desc">Descripción</th>
+          <th role="columnheader" scope="col" class="col-qty">Cantidad</th>
+          <th role="columnheader" scope="col" class="col-unit">Precio unitario</th>
+          <th role="columnheader" scope="col" class="col-tax">Impuesto</th>
+          <th role="columnheader" scope="col" class="col-line">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody role="rowgroup" id="items-body">
+        {% for item in invoice.items %}
+        <tr role="row">
+          <td role="cell" class="col-desc">{{ item.description }}</td>
+          <td role="cell" class="col-qty">{{ item.quantity }}</td>
+          <td role="cell" class="col-unit">{{ item.unit_price|floatformat:2 }}</td>
+          <td role="cell" class="col-tax">{{ item.tax_percent }}%</td>
+          <td role="cell" class="col-line">{{ item.line_total|floatformat:2 }}</td>
+        </tr>
+        {% empty %}
+        <tr role="row">
+          <td role="cell" colspan="5" class="col-desc">No hay productos añadidos.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+      <tfoot role="rowgroup">
+        <tr role="row">
+          <th role="cell" colspan="4" class="text-right">Subtotal</th>
+          <td role="cell" id="print-subtotal">{{ invoice.subtotal|floatformat:2 }}</td>
+        </tr>
+        <tr role="row">
+          <th role="cell" colspan="4" class="text-right">Impuestos</th>
+          <td role="cell" id="print-taxes">{{ invoice.taxes|floatformat:2 }}</td>
+        </tr>
+        <tr role="row">
+          <th role="cell" colspan="4" class="text-right">Descuento</th>
+          <td role="cell" id="print-discount">{{ invoice.discount|floatformat:2 }}</td>
+        </tr>
+        <tr role="row">
+          <th role="cell" colspan="4" class="text-right"><strong>Total</strong></th>
+          <td role="cell" id="print-total"><strong>{{ invoice.total|floatformat:2 }}</strong></td>
+        </tr>
+      </tfoot>
+    </table>
+  </section>
+
+  <!-- Resumen visual y firma -->
+  <section class="print-summary" aria-label="Resumen y firma">
+    <div class="summary-cards" aria-hidden="false">
+      <div class="card-subtotal">
+        <p class="label">Subtotal</p>
+        <p class="amount" id="summary-subtotal">{{ invoice.subtotal|floatformat:2 }}</p>
+      </div>
+      <div class="card-taxes">
+        <p class="label">Impuestos</p>
+        <p class="amount" id="summary-taxes">{{ invoice.taxes|floatformat:2 }}</p>
+      </div>
+      <div class="card-total">
+        <p class="label">Total</p>
+        <p class="amount" id="summary-total">{{ invoice.total|floatformat:2 }}</p>
+      </div>
+    </div>
+
+    <div class="signature-block" aria-label="Firma y autorizaciones">
+      <div class="signature-line">
+        <p class="sig-label">Firma autorizado</p>
+        <div class="sig-space" aria-hidden="true"></div>
+        <p class="sig-name">{{ company.authorized_name|default:"____________________" }}</p>
+      </div>
+      <div class="reference">
+        <p class="ref-label">Términos y condiciones</p>
+        <p class="ref-text">{{ invoice.terms|default:"Los precios incluyen impuestos salvo indicación contraria. Pago: Contado." }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pie de página con datos legales y número de página (impresión) -->
+  <footer class="print-footer" role="contentinfo" aria-label="Pie de página">
+    <p class="legal">{{ company.legal_notice|default:"Documento generado electrónicamente. Conserva este comprobante." }}</p>
+    <p class="page-number">Página <span class="page-current">1</span></p>
+  </footer>
+
+</main>
+{% endblock %}
+
+
+
+
+
+ 

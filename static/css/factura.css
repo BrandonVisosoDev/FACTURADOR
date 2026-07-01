@@ -1,0 +1,246 @@
+
+
+/* Variables de paleta */
+
+:root{
+  --bg: #0f1113;
+  --panel: #121416;
+  --muted: #6f7a82;
+  --text: #0b0f12;
+  --accent: #2EA3FF;
+  --card: #f6f8fa;
+  --border: rgba(11,15,18,0.06);
+  --radius: 8px;
+  --font-sans: "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Página A4 para impresión */
+@page {
+  size: A4 portrait;
+  margin: 18mm 16mm;
+}
+
+/* Forzar ajuste de color en navegadores que lo soportan */
+* {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  box-sizing: border-box;
+}
+
+/* Contenedor principal optimizado para impresión */
+.invoice-print {
+  width: 100%;
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 12mm;
+  background: white;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 12pt;
+  line-height: 1.35;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header: logo y metadatos alineados */
+.print-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
+/* Marca y logo */
+.print-brand {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.print-logo img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--accent), #1b6fb8);
+  padding: 6px;
+}
+.logo-fallback {
+  display: inline-block;
+  width: 64px;
+  height: 64px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--accent), #1b6fb8);
+  color: #07101a;
+  font-weight: 800;
+  font-size: 20px;
+  line-height: 52px;
+  text-align: center;
+}
+
+/* Datos de la empresa (lado izquierdo) */
+.print-company .company-name {
+  font-weight: 700;
+  font-size: 13pt;
+  margin: 0;
+}
+.print-company .company-meta {
+  margin: 2px 0;
+  color: var(--muted);
+  font-size: 10.5pt;
+}
+
+/* Metadatos de la factura (lado derecho) */
+.print-meta {
+  text-align: right;
+  min-width: 160px;
+  font-size: 10.5pt;
+  color: var(--muted);
+}
+.print-meta .meta-line { margin: 4px 0; }
+#print-title { display: none; }
+
+/* Emisor y cliente: dos columnas */
+.print-parties {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 12px 0;
+  align-items: start;
+}
+.emisor, .cliente {
+  padding: 8px;
+  border-radius: var(--radius);
+  background: #ffffff;
+  border: 1px solid var(--border);
+}
+.emisor .label, .cliente .label {
+  color: var(--accent);
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  font-size: 10.5pt;
+}
+.emisor .value, .cliente .value {
+  margin: 2px 0;
+  color: var(--text);
+  font-size: 10.5pt;
+}
+
+/* Tabla de items: optimizada para impresión */
+.print-items .items {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 6px;
+  font-size: 10.5pt;
+}
+.items thead th {
+  text-align: left;
+  padding: 8px 6px;
+  font-weight: 700;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  background: #ffffff;
+}
+.items tbody td {
+  padding: 8px 6px;
+  vertical-align: top;
+  border-bottom: 1px dashed rgba(11,15,18,0.04);
+  color: var(--text);
+}
+.items tbody tr:nth-child(even) td {
+  background: rgba(11,15,18,0.01);
+}
+
+/* Column widths */
+.col-desc { width: 52%; }
+.col-qty  { width: 10%; text-align: center; }
+.col-unit { width: 14%; text-align: right; }
+.col-tax  { width: 12%; text-align: right; }
+.col-line { width: 12%; text-align: right; font-weight:700; }
+
+/* Pie de tabla con totales */
+.items tfoot th, .items tfoot td {
+  padding: 8px 6px;
+  font-weight: 700;
+  border-top: 1px solid var(--border);
+  background: #ffffff;
+}
+.items tfoot .text-right { text-align: right; }
+
+/* Resumen visual y firma */
+.print-summary {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+/* Tarjetas de resumen (apiladas en impresión) */
+.summary-cards {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  min-width: 220px;
+}
+.summary-cards .card-subtotal,
+.summary-cards .card-taxes,
+.summary-cards .card-total {
+  padding: 8px;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+}
+.summary-cards .label { color: var(--muted); font-size: 10pt; margin: 0; }
+.summary-cards .amount { font-weight: 800; font-size: 12pt; margin: 6px 0 0 0; color: var(--text); }
+.card-taxes { border-left: 4px solid rgba(46,163,255,0.12); }
+.card-total { border-left: 4px solid var(--accent); }
+
+/* Bloque de firma y términos */
+.signature-block {
+  flex: 1 1 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.signature-line {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sig-space {
+  height: 48px;
+  border-bottom: 1px dashed var(--border);
+  margin: 6px 0;
+}
+.sig-label { font-size: 10pt; color: var(--muted); margin: 0; }
+.sig-name { font-weight: 700; font-size: 10pt; margin: 0; }
+
+/* Pie de página para impresión */
+.print-footer {
+  margin-top: 14px;
+  border-top: 1px dashed var(--border);
+  padding-top: 8px;
+  font-size: 9.5pt;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.page-number { font-weight: 600; color: var(--muted); }
+
+/* Ocultar elementos interactivos en impresión */
+@media print {
+  .btn, .actions, .no-print { display: none !important; }
+  body { background: white; }
+  .invoice-print { box-shadow: none; border: none; padding: 10mm; }
+}
+
+/* Ajustes responsivos para vista en pantalla (no afectan impresión) */
+@media (max-width: 880px) {
+  .print-parties { grid-template-columns: 1fr; }
+  .print-meta { text-align: left; margin-top: 8px; }
+  .print-summary { flex-direction: column; }
+}

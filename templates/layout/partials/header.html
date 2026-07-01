@@ -8,9 +8,10 @@
 
   <!-- Normalize -->
   <link rel="stylesheet" href="{% static 'normalize/normalize.css' %}">
-
+  {% block extra_css %}
   <!-- Estilos principales -->
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  {% endblock %}
 
   <title>EDELYX_FACTURADOR</title>
 </head>
