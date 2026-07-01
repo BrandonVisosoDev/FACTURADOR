@@ -1,246 +1,335 @@
 
+  :root{
+    --color-background: #121212;
+    --color-texto: #F8F9FA;
+    --color-inputs: #28282B;
+    --color-accent: #2EA3FF;
+    --gap: 2.4rem;
+    --radius: 6px;
+    --max-width: 1200px;
 
-/* Variables de paleta */
+    /* tokens derivados de la paleta base */
+    --color-muted: #9A9CA3;
+    --color-border: #3A3A3F;
+    --color-accent-soft: rgba(46,163,255,0.12);
+    --color-danger: #FF6B6B;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
 
-:root{
-  --bg: #0f1113;
-  --panel: #121416;
-  --muted: #6f7a82;
-  --text: #0b0f12;
-  --accent: #2EA3FF;
-  --card: #f6f8fa;
-  --border: rgba(11,15,18,0.06);
-  --radius: 8px;
-  --font-sans: "Helvetica Neue", Arial, sans-serif;
-}
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
 
-/* Página A4 para impresión */
-@page {
-  size: A4 portrait;
-  margin: 18mm 16mm;
-}
+  body{
+    background: var(--color-background);
+    color: var(--color-texto);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    padding: 3.2rem 1.5rem;
+    display:flex;
+    justify-content:center;
+    line-height: 1.5;
+  }
 
-/* Forzar ajuste de color en navegadores que lo soportan */
-* {
-  -webkit-print-color-adjust: exact;
-  print-color-adjust: exact;
-  box-sizing: border-box;
-}
+  .factura{
+    width:100%;
+    max-width: var(--max-width);
+    background: linear-gradient(180deg, #151517 0%, var(--color-background) 320px);
+    border: 1px solid var(--color-border);
+    border-radius: calc(var(--radius) * 2);
+    overflow: hidden;
+  }
 
-/* Contenedor principal optimizado para impresión */
-.invoice-print {
-  width: 100%;
-  max-width: 210mm;
-  margin: 0 auto;
-  padding: 12mm;
-  background: white;
-  color: var(--text);
-  font-family: var(--font-sans);
-  font-size: 12pt;
-  line-height: 1.35;
-  -webkit-font-smoothing: antialiased;
-}
+  /* ===== Ribbon / header ===== */
+  .ribbon{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 1.4rem 2.4rem;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-inputs);
+  }
+  .ribbon-tag{
+    display:flex;
+    align-items:center;
+    gap: 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.28em;
+    color: var(--color-accent);
+    text-transform: uppercase;
+  }
+  .ribbon-tag::before{
+    content:"";
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 0 4px var(--color-accent-soft);
+  }
+  .logo-box{
+    width: 46px; height: 46px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius);
+    display:flex; align-items:center; justify-content:center;
+    font-family: var(--font-display);
+    font-weight:700;
+    font-size: 0.95rem;
+    color: var(--color-texto);
+    background: var(--color-background);
+  }
 
-/* Header: logo y metadatos alineados */
-.print-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 8px;
-}
+  /* ===== Brand hero ===== */
+  .brand{
+    text-align:center;
+    padding: 2.6rem 2rem 2rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .brand h1{
+    margin:0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    letter-spacing: 0.32em;
+    background: linear-gradient(90deg, var(--color-texto), var(--color-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .brand p{
+    margin: 0.5rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    color: var(--color-muted);
+    text-transform: uppercase;
+  }
 
-/* Marca y logo */
-.print-brand {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-.print-logo img {
-  width: 64px;
-  height: 64px;
-  object-fit: contain;
-  border-radius: 6px;
-  background: linear-gradient(135deg, var(--accent), #1b6fb8);
-  padding: 6px;
-}
-.logo-fallback {
-  display: inline-block;
-  width: 64px;
-  height: 64px;
-  border-radius: 6px;
-  background: linear-gradient(135deg, var(--accent), #1b6fb8);
-  color: #07101a;
-  font-weight: 800;
-  font-size: 20px;
-  line-height: 52px;
-  text-align: center;
-}
+  /* ===== Meta section: N° Factura / Emisor / Factura para ===== */
+  .meta{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gap);
+    padding: 2rem 2.4rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  @media (max-width: 720px){
+    .meta{ grid-template-columns: 1fr; }
+  }
 
-/* Datos de la empresa (lado izquierdo) */
-.print-company .company-name {
-  font-weight: 700;
-  font-size: 13pt;
-  margin: 0;
-}
-.print-company .company-meta {
-  margin: 2px 0;
-  color: var(--muted);
-  font-size: 10.5pt;
-}
+  .folio-block{
+    display:flex;
+    flex-direction:column;
+    gap: 0.9rem;
+  }
+  .folio-number{
+    display:flex;
+    align-items:center;
+    gap: 1rem;
+  }
+  .folio-number .value{
+    font-family: var(--font-mono);
+    font-size: 1.4rem;
+    letter-spacing: 0.06em;
+    background: transparent;
+    border: none;
+    color: var(--color-texto);
+    width: 8ch;
+    outline: none;
+  }
+  .barcode{
+    display:flex;
+    align-items:flex-end;
+    gap: 2px;
+    height: 26px;
+    opacity: 0.85;
+  }
+  .barcode span{
+    width: 2px;
+    background: var(--color-accent);
+    display:block;
+  }
 
-/* Metadatos de la factura (lado derecho) */
-.print-meta {
-  text-align: right;
-  min-width: 160px;
-  font-size: 10.5pt;
-  color: var(--muted);
-}
-.print-meta .meta-line { margin: 4px 0; }
-#print-title { display: none; }
+  .field-group{
+    display:flex;
+    flex-direction:column;
+    gap: 1.1rem;
+  }
+  label{
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    font-weight: 500;
+  }
+  input[type="text"],
+  input[type="number"],
+  textarea{
+    width: 100%;
+    background: var(--color-inputs);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    color: var(--color-texto);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    padding: 0.75rem 0.9rem;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  input[type="text"]::placeholder,
+  textarea::placeholder{ color: var(--color-muted); }
+  input:focus, textarea:focus{
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-accent-soft);
+  }
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap: 0.5rem;
+  }
 
-/* Emisor y cliente: dos columnas */
-.print-parties {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin: 12px 0;
-  align-items: start;
-}
-.emisor, .cliente {
-  padding: 8px;
-  border-radius: var(--radius);
-  background: #ffffff;
-  border: 1px solid var(--border);
-}
-.emisor .label, .cliente .label {
-  color: var(--accent);
-  font-weight: 700;
-  margin: 0 0 6px 0;
-  font-size: 10.5pt;
-}
-.emisor .value, .cliente .value {
-  margin: 2px 0;
-  color: var(--text);
-  font-size: 10.5pt;
-}
+  /* ===== Resumen (tabla de artículos) ===== */
+  .resumen{
+    padding: 2rem 2.4rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .resumen-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom: 1.2rem;
+  }
+  .resumen-head h2{
+    margin:0;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-texto);
+  }
+  .resumen-head span{
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-muted);
+  }
 
-/* Tabla de items: optimizada para impresión */
-.print-items .items {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 6px;
-  font-size: 10.5pt;
-}
-.items thead th {
-  text-align: left;
-  padding: 8px 6px;
-  font-weight: 700;
-  color: var(--text);
-  border-bottom: 1px solid var(--border);
-  background: #ffffff;
-}
-.items tbody td {
-  padding: 8px 6px;
-  vertical-align: top;
-  border-bottom: 1px dashed rgba(11,15,18,0.04);
-  color: var(--text);
-}
-.items tbody tr:nth-child(even) td {
-  background: rgba(11,15,18,0.01);
-}
+  table.items{
+    width:100%;
+    border-collapse: collapse;
+  }
+  table.items thead th{
+    text-align:left;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    font-weight: 500;
+    padding: 0.6rem 0.6rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  table.items thead th:last-child,
+  table.items td:last-child{ text-align:right; }
+  table.items tbody td{
+    padding: 0.5rem 0.6rem;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+  }
+  table.items tbody tr:hover{ background: rgba(255,255,255,0.02); }
+  table.items input{
+    padding: 0.5rem 0.6rem;
+    font-size: 0.9rem;
+  }
+  .col-qty, .col-price{ width: 130px; }
+  .col-sub{ width: 130px; font-family: var(--font-mono); }
+  .row-subtotal{
+    font-family: var(--font-mono);
+    color: var(--color-texto);
+  }
+  /* ===== Términos + Totales ===== */
+  .lower{
+    display:grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: var(--gap);
+    padding: 2rem 2.4rem;
+  }
+  @media (max-width: 720px){
+    .lower{ grid-template-columns: 1fr; }
+  }
 
-/* Column widths */
-.col-desc { width: 52%; }
-.col-qty  { width: 10%; text-align: center; }
-.col-unit { width: 14%; text-align: right; }
-.col-tax  { width: 12%; text-align: right; }
-.col-line { width: 12%; text-align: right; font-weight:700; }
+  .terminos h3{
+    margin: 0 0 0.9rem;
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-texto);
+  }
+  .terminos textarea{
+    min-height: 130px;
+    resize: vertical;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
 
-/* Pie de tabla con totales */
-.items tfoot th, .items tfoot td {
-  padding: 8px 6px;
-  font-weight: 700;
-  border-top: 1px solid var(--border);
-  background: #ffffff;
-}
-.items tfoot .text-right { text-align: right; }
+  .totales{
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    gap: 0.9rem;
+  }
+  .tax-inputs{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 0.4rem;
+  }
+  .totales-list{
+    display:flex;
+    flex-direction:column;
+    gap: 0.6rem;
+    padding-top: 0.4rem;
+  }
+  .totales-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+  }
+  .totales-row .amount{
+    font-family: var(--font-mono);
+    color: var(--color-texto);
+  }
+  .totales-row.total{
+    margin-top: 0.5rem;
+    padding: 0.9rem 1rem;
+    background: var(--color-accent-soft);
+    border-left: 3px solid var(--color-accent);
+    border-radius: var(--radius);
+    font-weight:600;
+  }
+  .totales-row.total .label{
+    display:flex;
+    align-items:center;
+    gap: 0.4rem;
+    color: var(--color-texto);
+    font-family: var(--font-display);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 0.82rem;
+  }
+  .totales-row.total .chev{
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    letter-spacing: -2px;
+    font-size: 0.9rem;
+  }
+  .totales-row.total .amount{
+    font-size: 1.3rem;
+    color: var(--color-accent);
+  }
 
-/* Resumen visual y firma */
-.print-summary {
-  display: flex;
-  gap: 12px;
-  margin-top: 12px;
-  align-items: flex-start;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-/* Tarjetas de resumen (apiladas en impresión) */
-.summary-cards {
-  display: flex;
-  gap: 8px;
-  flex-direction: column;
-  min-width: 220px;
-}
-.summary-cards .card-subtotal,
-.summary-cards .card-taxes,
-.summary-cards .card-total {
-  padding: 8px;
-  border-radius: 6px;
-  background: #ffffff;
-  border: 1px solid var(--border);
-}
-.summary-cards .label { color: var(--muted); font-size: 10pt; margin: 0; }
-.summary-cards .amount { font-weight: 800; font-size: 12pt; margin: 6px 0 0 0; color: var(--text); }
-.card-taxes { border-left: 4px solid rgba(46,163,255,0.12); }
-.card-total { border-left: 4px solid var(--accent); }
-
-/* Bloque de firma y términos */
-.signature-block {
-  flex: 1 1 320px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.signature-line {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.sig-space {
-  height: 48px;
-  border-bottom: 1px dashed var(--border);
-  margin: 6px 0;
-}
-.sig-label { font-size: 10pt; color: var(--muted); margin: 0; }
-.sig-name { font-weight: 700; font-size: 10pt; margin: 0; }
-
-/* Pie de página para impresión */
-.print-footer {
-  margin-top: 14px;
-  border-top: 1px dashed var(--border);
-  padding-top: 8px;
-  font-size: 9.5pt;
-  color: var(--muted);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.page-number { font-weight: 600; color: var(--muted); }
-
-/* Ocultar elementos interactivos en impresión */
-@media print {
-  .btn, .actions, .no-print { display: none !important; }
-  body { background: white; }
-  .invoice-print { box-shadow: none; border: none; padding: 10mm; }
-}
-
-/* Ajustes responsivos para vista en pantalla (no afectan impresión) */
-@media (max-width: 880px) {
-  .print-parties { grid-template-columns: 1fr; }
-  .print-meta { text-align: left; margin-top: 8px; }
-  .print-summary { flex-direction: column; }
-}
+  @media print{
+    body{ background: #fff; padding:0; }
+    .factura{ border:none; }
+  }

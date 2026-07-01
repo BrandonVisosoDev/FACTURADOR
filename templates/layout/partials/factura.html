@@ -1,149 +1,117 @@
-{% extends "base.html" %}
-
-{% block extra_css %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDELYX — Factura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/factura.css' %}">
-{% endblock %}
+</head>
+<body>
 
-{% block content %}
-<main id="invoice-print" class="invoice-print" role="document" aria-labelledby="invoice-title">
-   <!-- Header: logo y metadatos -->
-  <header class="print-header" role="banner" aria-label="Encabezado de la factura">
-    <div class="print-brand" aria-hidden="false">
-      <div class="print-logo" aria-hidden="true">
-        {% if company.logo_url %}
-          <img src="{{ company.logo_url }}" alt="{{ company.name }} logo" />
-        {% else %}
-          <span class="logo-fallback">{{ company.initials|default:"E" }}</span>
-        {% endif %}
+<div class="factura">
+
+  <!-- Ribbon superior: INVOICE + logo -->
+  <div class="ribbon">
+    <span class="ribbon-tag">Invoice</span>
+    <div class="logo-box">EX</div>
+  </div>
+
+  <!-- Marca -->
+  <div class="brand">
+    <h1>EDELYX</h1>
+    <p>Factura de servicios</p>
+  </div>
+
+  <!-- N° Factura / Emisor / Factura para -->
+  <div class="meta">
+    <div class="folio-block">
+      <label>N° de factura</label>
+      <div class="folio-number">
+        <input class="value" type="text" id="folio" value="0042" />
+        <div class="barcode" id="barcode"></div>
       </div>
-      <div class="print-company">
-        <p class="company-name">{{ company.name }}</p>
-        <p class="company-meta">{{ company.address }}</p>
-        <p class="company-meta">RUC: {{ company.ruc }}</p>
-        <p class="company-meta">{{ company.email }}</p>
+      <div class="field" style="margin-top:0.6rem;">
+        <label>Fecha</label>
+        <input type="text" id="fecha" placeholder="DD / MM / AAAA" />
       </div>
     </div>
 
-    <div class="print-meta" aria-labelledby="invoice-title">
-      <h1 id="invoice-title" class="sr-only">Factura</h1>
-      <p class="meta-line"><strong>Factura N°:</strong> {{ invoice.number }}</p>
-      <p class="meta-line"><strong>Año:</strong> {{ invoice.date.year }} <strong>Mes:</strong> {{ invoice.date.month }} <strong>Día:</strong> {{ invoice.date.day }}</p>
-      <p class="meta-line"><strong>Tome:</strong> {{ invoice.tome }}</p>
-      <p class="meta-line"><strong>Invoice:</strong> {{ invoice.series }}</p>
+    <div class="field-group">
+      <div class="field">
+        <label>Emisor</label>
+        <input type="text" id="emisor" placeholder="Nombre del emisor" />
+      </div>
+      <div class="field">
+        <label>Factura para</label>
+        <input type="text" id="cliente" placeholder="Nombre del cliente" />
+      </div>
     </div>
-  </header>
+  </div>
 
-  <!-- Emisor y Cliente -->
-  <section class="print-parties" aria-label="Datos de emisor y cliente">
-    <article class="emisor" aria-labelledby="emisor-title">
-      <h2 id="emisor-title" class="visually-hidden">Emisor</h2>
-      <p class="label">Emitido por</p>
-      <p class="value"><strong>{{ company.name }}</strong></p>
-      <p class="value">{{ company.address }}</p>
-      <p class="value">RUC: {{ company.ruc }}</p>
-      <p class="value">{{ company.email }}</p>
-    </article>
-
-    <article class="cliente" aria-labelledby="cliente-title">
-      <h2 id="cliente-title" class="visually-hidden">Cliente</h2>
-      <p class="label">Facturado a</p>
-      <p class="value"><strong>{{ invoice.client.name }}</strong></p>
-      <p class="value">{{ invoice.client.address }}</p>
-      <p class="value">NIT: {{ invoice.client.nit }}</p>
-      <p class="value">{{ invoice.client.email }}</p>
-    </article>
-  </section>
-
-  <!-- Tabla de productos (detalle) -->
-  <section class="print-items" aria-label="Detalle de productos">
-    <table class="items" role="table" aria-describedby="invoice-title">
-      <thead role="rowgroup">
-        <tr role="row">
-          <th role="columnheader" scope="col" class="col-desc">Descripción</th>
-          <th role="columnheader" scope="col" class="col-qty">Cantidad</th>
-          <th role="columnheader" scope="col" class="col-unit">Precio unitario</th>
-          <th role="columnheader" scope="col" class="col-tax">Impuesto</th>
-          <th role="columnheader" scope="col" class="col-line">Subtotal</th>
+  <!-- Resumen: tabla de artículos -->
+  <div class="resumen">
+    <div class="resumen-head">
+      <h2>Resumen</h2>
+      <span id="itemCount">3 artículos</span>
+    </div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th>Artículo</th>
+          <th class="col-qty">Cantidad</th>
+          <th class="col-price">Precio unitario</th>
+          <th class="col-sub">Subtotal</th>
         </tr>
       </thead>
-      <tbody role="rowgroup" id="items-body">
-        {% for item in invoice.items %}
-        <tr role="row">
-          <td role="cell" class="col-desc">{{ item.description }}</td>
-          <td role="cell" class="col-qty">{{ item.quantity }}</td>
-          <td role="cell" class="col-unit">{{ item.unit_price|floatformat:2 }}</td>
-          <td role="cell" class="col-tax">{{ item.tax_percent }}%</td>
-          <td role="cell" class="col-line">{{ item.line_total|floatformat:2 }}</td>
-        </tr>
-        {% empty %}
-        <tr role="row">
-          <td role="cell" colspan="5" class="col-desc">No hay productos añadidos.</td>
-        </tr>
-        {% endfor %}
+      <tbody id="itemsBody">
       </tbody>
-
-      <tfoot role="rowgroup">
-        <tr role="row">
-          <th role="cell" colspan="4" class="text-right">Subtotal</th>
-          <td role="cell" id="print-subtotal">{{ invoice.subtotal|floatformat:2 }}</td>
-        </tr>
-        <tr role="row">
-          <th role="cell" colspan="4" class="text-right">Impuestos</th>
-          <td role="cell" id="print-taxes">{{ invoice.taxes|floatformat:2 }}</td>
-        </tr>
-        <tr role="row">
-          <th role="cell" colspan="4" class="text-right">Descuento</th>
-          <td role="cell" id="print-discount">{{ invoice.discount|floatformat:2 }}</td>
-        </tr>
-        <tr role="row">
-          <th role="cell" colspan="4" class="text-right"><strong>Total</strong></th>
-          <td role="cell" id="print-total"><strong>{{ invoice.total|floatformat:2 }}</strong></td>
-        </tr>
-      </tfoot>
     </table>
-  </section>
+  </div>
 
-  <!-- Resumen visual y firma -->
-  <section class="print-summary" aria-label="Resumen y firma">
-    <div class="summary-cards" aria-hidden="false">
-      <div class="card-subtotal">
-        <p class="label">Subtotal</p>
-        <p class="amount" id="summary-subtotal">{{ invoice.subtotal|floatformat:2 }}</p>
-      </div>
-      <div class="card-taxes">
-        <p class="label">Impuestos</p>
-        <p class="amount" id="summary-taxes">{{ invoice.taxes|floatformat:2 }}</p>
-      </div>
-      <div class="card-total">
-        <p class="label">Total</p>
-        <p class="amount" id="summary-total">{{ invoice.total|floatformat:2 }}</p>
-      </div>
+  <!-- Términos y totales -->
+  <div class="lower">
+    <div class="terminos">
+      <h3>Términos y condiciones</h3>
+      <textarea id="terminos" placeholder="El pago debe realizarse dentro de los 15 días posteriores a la emisión de esta factura...">El pago debe realizarse dentro de los 15 días posteriores a la emisión de esta factura. Los pagos tardíos podrán generar un recargo del 2% mensual.</textarea>
     </div>
 
-    <div class="signature-block" aria-label="Firma y autorizaciones">
-      <div class="signature-line">
-        <p class="sig-label">Firma autorizado</p>
-        <div class="sig-space" aria-hidden="true"></div>
-        <p class="sig-name">{{ company.authorized_name|default:"____________________" }}</p>
+    <div class="totales">
+      <div class="tax-inputs">
+        <div class="field">
+          <label>Impuesto (%)</label>
+          <input type="number" id="taxRate" value="16" min="0" step="0.01" />
+        </div>
+        <div class="field">
+          <label>Descuento ($)</label>
+          <input type="number" id="discount" value="0" min="0" step="0.01" />
+        </div>
       </div>
-      <div class="reference">
-        <p class="ref-label">Términos y condiciones</p>
-        <p class="ref-text">{{ invoice.terms|default:"Los precios incluyen impuestos salvo indicación contraria. Pago: Contado." }}</p>
+
+      <div class="totales-list">
+        <div class="totales-row">
+          <span class="label">Subtotal</span>
+          <span class="amount" id="subtotalOut">$0.00</span>
+        </div>
+        <div class="totales-row">
+          <span class="label">Impuesto</span>
+          <span class="amount" id="taxOut">$0.00</span>
+        </div>
+        <div class="totales-row">
+          <span class="label">Descuento</span>
+          <span class="amount" id="discountOut">$0.00</span>
+        </div>
+        <div class="totales-row total">
+          <span class="label">Total <span class="chev">&lt;&lt;&lt;</span></span>
+          <span class="amount" id="totalOut">$0.00</span>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- Pie de página con datos legales y número de página (impresión) -->
-  <footer class="print-footer" role="contentinfo" aria-label="Pie de página">
-    <p class="legal">{{ company.legal_notice|default:"Documento generado electrónicamente. Conserva este comprobante." }}</p>
-    <p class="page-number">Página <span class="page-current">1</span></p>
-  </footer>
-
-</main>
-{% endblock %}
-
-
-
-
-
- 
+</div>
+</body>
+</html>
