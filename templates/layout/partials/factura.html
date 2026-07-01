@@ -4,8 +4,7 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/factura.css' %}">
 {% endblock %}
-</head>
-<body>
+{% block content %}
 
 <div class="factura">
 
@@ -108,5 +107,4 @@
   </div>
 
 </div>
-</body>
-</html>
+{% endblock %}
