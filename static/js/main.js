@@ -11,6 +11,59 @@ let contadorId = 1;
 
 
 // =====================================================================
+// PERSISTENCIA: Funciones para guardar y cargar datos del localStorage
+// Los datos se mantienen aunque se recargue la página.
+// =====================================================================
+
+function guardarEnStorage() {
+    localStorage.setItem('facturador_articulos', JSON.stringify(listaArticulos));
+    localStorage.setItem('facturador_contadorId', contadorId);
+    guardarCamposFormulario();
+}
+
+function cargarDeStorage() {
+    const articulosGuardados = localStorage.getItem('facturador_articulos');
+    const contadorGuardado = localStorage.getItem('facturador_contadorId');
+
+    if (articulosGuardados) {
+        listaArticulos = JSON.parse(articulosGuardados);
+    }
+    if (contadorGuardado) {
+        contadorId = parseInt(contadorGuardado);
+    }
+
+    restaurarCamposFormulario();
+}
+
+// Guarda todos los campos de los formularios (factura y resumen)
+function guardarCamposFormulario() {
+    const campos = {};
+    const ids = ['emisor_name', 'cobrar_a', 'enviar_a', 'invoice_number',
+                 'date_issued', 'due_date', 'payment_terms',
+                 'impuesto_cobrar', 'descuento_realizar'];
+
+    ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) campos[id] = el.value;
+    });
+
+    localStorage.setItem('facturador_campos', JSON.stringify(campos));
+}
+
+// Restaura los valores de los campos desde localStorage
+function restaurarCamposFormulario() {
+    const camposGuardados = localStorage.getItem('facturador_campos');
+    if (!camposGuardados) return;
+
+    const campos = JSON.parse(camposGuardados);
+    Object.keys(campos).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = campos[id];
+    });
+}
+
+
+// =====================================================================
 // BLOQUE 1: LÓGICA DE LA TABLA DE PRODUCTOS (INTERFAZ VISUAL)
 // Este bloque se encarga de leer lo que escribes, hacer las matemáticas
 // y dibujar o esconder la tabla dinámicamente.
@@ -20,6 +73,18 @@ let contadorId = 1;
 const btnAgregar = document.getElementById('agregar_producto');
 const tablaProductos = document.getElementById('tabla_productos');
 const tbodyProductos = document.getElementById('productos_body');
+
+// Cargamos datos guardados del localStorage (si existen) y redibujamos la tabla
+cargarDeStorage();
+renderizarTabla();
+
+// Escuchamos cambios en los campos del formulario para guardarlos automáticamente
+['emisor_name', 'cobrar_a', 'enviar_a', 'invoice_number',
+ 'date_issued', 'due_date', 'payment_terms',
+ 'impuesto_cobrar', 'descuento_realizar'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', guardarCamposFormulario);
+});
 
 // 1.1 - Evento: ¿Qué pasa cuando le damos clic a "Agregar Producto"?
 btnAgregar.addEventListener('click', function() {
@@ -59,6 +124,9 @@ btnAgregar.addEventListener('click', function() {
 
     // Llamamos a la función que redibuja la tabla con los datos actualizados
     renderizarTabla();
+
+    // Guardamos en localStorage para que los datos sobrevivan recargas
+    guardarEnStorage();
 });
 
 // 1.2 - Función: Dibuja las filas de la tabla en el HTML
@@ -103,6 +171,9 @@ function eliminarFila(index) {
     // Como la memoria cambió, volvemos a dibujar la tabla
     // (Si eliminamos el último, la función automáticamente esconderá la tabla)
     renderizarTabla();
+
+    // Actualizamos el localStorage
+    guardarEnStorage();
 }
 
 // =====================================================================
@@ -157,6 +228,56 @@ btnMostrarResumen.addEventListener('click', function() {
     document.getElementById('total-sub').textContent = `$${subtotal.toFixed(2)}`;
     document.getElementById('total-imp').textContent = `$${totalImpuestos.toFixed(2)}`;
     document.getElementById('total-amount').textContent = `$${total.toFixed(2)}`;
+});
+
+
+// =====================================================================
+// BLOQUE 3: BOTÓN "LIMPIAR TODO"
+// Resetea toda la plantilla (formularios, tablas, tarjetas) pero NO
+// reinicia el contadorId, ya que los IDs se guardarán en la BD.
+// =====================================================================
+
+const btnLimpiar = document.getElementById('btn-limpiar');
+
+btnLimpiar.addEventListener('click', function() {
+
+    // Confirmamos con el usuario antes de borrar todo
+    if (!confirm('¿Estás seguro de que deseas limpiar toda la factura?')) return;
+
+    // Vaciamos la lista de artículos (pero NO el contadorId)
+    listaArticulos = [];
+
+    // Limpiamos los campos del formulario de factura
+    ['emisor_name', 'cobrar_a', 'enviar_a', 'invoice_number',
+     'date_issued', 'due_date', 'payment_terms'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+
+    // Reseteamos los campos del formulario de resumen a sus valores por defecto
+    document.getElementById('impuesto_cobrar').value = '0.00';
+    document.getElementById('descuento_realizar').value = '0.00';
+
+    // Limpiamos los campos de producto
+    document.getElementById('producto_name').value = '';
+    document.getElementById('producto_cantidad').value = '1';
+    document.getElementById('producto_precio').value = '';
+    document.getElementById('producto_impuesto').value = '0.00';
+
+    // Redibujamos la tabla de productos (quedará vacía y se esconderá)
+    renderizarTabla();
+
+    // Limpiamos la tabla del resumen
+    resumenBody.innerHTML = '';
+    resumenTabla.style.display = 'none';
+
+    // Reseteamos las tarjetas de totales
+    document.getElementById('total-sub').textContent = '0.00';
+    document.getElementById('total-imp').textContent = '0.00';
+    document.getElementById('total-amount').textContent = '0.00';
+
+    // Guardamos el estado limpio en localStorage (preservando contadorId)
+    guardarEnStorage();
 });
 
 
