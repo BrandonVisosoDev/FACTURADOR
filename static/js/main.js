@@ -105,9 +105,63 @@ function eliminarFila(index) {
     renderizarTabla();
 }
 
+// =====================================================================
+// BLOQUE 2: LÓGICA DEL RESUMEN (TABLA + TARJETAS DE TOTALES)
+// Al dar clic en "Mostrar Resumen", leemos los productos de listaArticulos,
+// aplicamos el impuesto global y el descuento del formulario de resumen,
+// y llenamos la tabla y las tarjetas con los cálculos.
+// =====================================================================
+
+const btnMostrarResumen = document.getElementById('btn-mostrar-resumen');
+const resumenTabla = document.getElementById('resumen-tabla');
+const resumenBody = document.getElementById('resumen-body');
+
+btnMostrarResumen.addEventListener('click', function() {
+
+    // 2.1 - Validación: ¿Hay productos agregados?
+    if (listaArticulos.length === 0) {
+        alert("Primero agrega al menos un producto a la tabla.");
+        return;
+    }
+
+    // 2.2 - Leemos el impuesto global y el descuento del formulario de resumen
+    const impuestoGlobal = parseFloat(document.getElementById('impuesto_cobrar').value) || 0;
+    const descuento = parseFloat(document.getElementById('descuento_realizar').value) || 0;
+
+    // 2.3 - Vaciamos la tabla del resumen y la hacemos visible
+    resumenBody.innerHTML = '';
+    resumenTabla.style.display = 'table';
+
+    // 2.4 - Recorremos los productos y llenamos la tabla
+    let subtotal = 0;
+
+    listaArticulos.forEach((articulo) => {
+        const monto = articulo.cantidad * articulo.precio; // Sin impuesto del producto
+        subtotal += monto;
+
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+            <td>${articulo.id}</td>
+            <td>${articulo.cantidad}</td>
+            <td>$${articulo.precio.toFixed(2)}</td>
+            <td>$${monto.toFixed(2)}</td>
+        `;
+        resumenBody.appendChild(fila);
+    });
+
+    // 2.5 - Cálculos finales con el impuesto GLOBAL (no el del producto)
+    const totalImpuestos = subtotal * (impuestoGlobal / 100);
+    const total = subtotal + totalImpuestos - descuento;
+
+    // 2.6 - Actualizamos las tarjetas visuales
+    document.getElementById('total-sub').textContent = `$${subtotal.toFixed(2)}`;
+    document.getElementById('total-imp').textContent = `$${totalImpuestos.toFixed(2)}`;
+    document.getElementById('total-amount').textContent = `$${total.toFixed(2)}`;
+});
+
 
 // =====================================================================
-// BLOQUE 2: ENVÍO DE DATOS A LA BASE DE DATOS (POST A DJANGO)
+// BLOQUE 3: ENVÍO DE DATOS A LA BASE DE DATOS (POST A DJANGO)
 // Este bloque empaqueta toda la pantalla en formato JSON y lo envía.
 // =====================================================================
 
