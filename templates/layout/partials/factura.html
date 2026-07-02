@@ -107,11 +107,23 @@
         </div>
         <div class="totales-row total">
           <span class="label">Total</span>
-          <span class="amount" id="totalOut">${{ "../../" }}${{ factura.total }}</span>
+          <span class="amount" id="totalOut">${{ factura.total }}</span>
         </div>
       </div>
     </div>
   </div>
 
 </div>
+
+{% if es_impresion %}
+<script>
+  window.onload = function() {
+      // Damos un pequeño retraso para asegurar que los estilos (fuentes, CSS) se pinten
+      setTimeout(function() {
+          window.print();
+      }, 300);
+  };
+</script>
+{% endif %}
+
 {% endblock %}

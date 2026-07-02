@@ -42,16 +42,33 @@ class Factura(models.Model):
     
     terminos_condiciones = models.TextField(default="El pago debe realizarse dentro de los 15 días...")
     descuento_global = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, verbose_name="Descuento ($)")
+    porcentaje_impuesto = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, verbose_name="Impuesto Global (%)")
     
     creado_el = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def descuento(self):
+        return self.descuento_global
+
+    @property
+    def subtotal(self):
+        return sum(detalle.subtotal for detalle in self.detallefactura_set.all())
+
+    @property
+    def total_impuestos(self):
+        return self.subtotal * (self.porcentaje_impuesto / 100)
+
+    @property
+    def total(self):
+        return self.subtotal + self.total_impuestos - self.descuento_global
 
     def __str__(self):
         return f"Factura {self.numero_factura} - {self.cliente.nombre}"
 
 
 class DetalleFactura(models.Model):
-    # Relación: Este renglón pertenece a UNA factura
-    factura = models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='detalles')
+    # Relación: Este renglón pertenece a UNA factura (usamos default related_name detallefactura_set)
+    factura = models.ForeignKey(Factura, on_delete=models.CASCADE)
     
     # Relación: Este renglón es de UN producto
     producto = models.ForeignKey(Producto, on_delete=models.PROTECT)
@@ -62,6 +79,10 @@ class DetalleFactura(models.Model):
     # Si mañana subes el precio del producto en el catálogo, tus facturas viejas no deben alterarse.
     precio_unitario_historico = models.DecimalField(max_digits=12, decimal_places=2)
     impuesto_historico = models.DecimalField(max_digits=5, decimal_places=2)
+
+    @property
+    def precio_unitario(self):
+        return self.precio_unitario_historico
 
     @property # property indica que es una propiedad, no un campo de la base de datos
     def subtotal(self):

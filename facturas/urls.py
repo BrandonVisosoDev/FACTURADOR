@@ -7,4 +7,5 @@ app_name = 'facturas'
 urlpatterns = [
     path('nueva/', views.crear_factura_view, name='crear_factura'),
     path('ver/<int:factura_id>/', views.ver_factura_view, name='ver_factura'),
+    path('imprimir_preview/', views.imprimir_preview_view, name='imprimir_preview'),
 ]

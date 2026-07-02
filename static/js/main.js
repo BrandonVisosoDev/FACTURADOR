@@ -307,8 +307,8 @@ async function enviarFactura() {
         date_issued: document.getElementById('date_issued')?.value,
         due_date: document.getElementById('due_date')?.value,
         payment_terms: document.getElementById('payment_terms')?.value,
-        
-        // ¡Magia aquí! Le pasamos directamente la variable global que tiene la lista de la tabla
+        impuesto_global: document.getElementById('impuesto_cobrar')?.value,
+        descuento_global: document.getElementById('descuento_realizar')?.value,
         articulos: listaArticulos
     };
 
@@ -342,4 +342,58 @@ async function enviarFactura() {
     } catch (error) {
         console.error("Hubo un error de red al intentar enviar:", error);
     }
+}
+
+// Vinculamos el botón de Generar Factura
+const btnGenerar = document.getElementById('btn-generar');
+if (btnGenerar) {
+    btnGenerar.addEventListener('click', enviarFactura);
+}
+
+// Vinculamos el botón de Imprimir
+const btnImprimir = document.getElementById('btn-imprimir');
+if (btnImprimir) {
+    btnImprimir.addEventListener('click', function() {
+        if (listaArticulos.length === 0) {
+            alert("Agrega al menos un producto antes de imprimir.");
+            return;
+        }
+
+        const data = {
+            emisor_name: document.getElementById('emisor_name')?.value,
+            cobrar_a: document.getElementById('cobrar_a')?.value,
+            invoice_number: document.getElementById('invoice_number')?.value,
+            date_issued: document.getElementById('date_issued')?.value,
+            due_date: document.getElementById('due_date')?.value,
+            payment_terms: document.getElementById('payment_terms')?.value,
+            impuesto_global: document.getElementById('impuesto_cobrar')?.value,
+            descuento_global: document.getElementById('descuento_realizar')?.value,
+            articulos: listaArticulos
+        };
+
+        // Creamos un formulario dinámico para hacer un POST a una nueva pestaña
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/facturas/imprimir_preview/';
+        form.target = '_blank';
+
+        // Agregamos el token CSRF
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrfmiddlewaretoken';
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+
+        // Agregamos los datos en JSON
+        const dataInput = document.createElement('input');
+        dataInput.type = 'hidden';
+        dataInput.name = 'factura_data';
+        dataInput.value = JSON.stringify(data);
+        form.appendChild(dataInput);
+
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+    });
 }
