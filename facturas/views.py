@@ -22,7 +22,7 @@ def crear_factura_view(request):
         'productos': Producto.objects.all(),
         'clientes': Cliente.objects.all()
     }
-    return render(request, 'layout/partials/single_page.html', context)
+    return render(request, 'single_page.html', context)
 
 
 # 2. SEGUNDA FUNCIÓN (¡Esta es la que te está faltando en el archivo!)
