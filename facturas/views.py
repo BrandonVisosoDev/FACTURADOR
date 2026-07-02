@@ -4,41 +4,33 @@ from django.shortcuts import render, get_object_or_404
 # pyrefly: ignore [missing-import]
 from .models import Producto, Cliente, Factura, DetalleFactura
 
+# 1. Primera función (Para cargar la pantalla single_page y recibir datos por JS)
 def crear_factura_view(request):
     if request.method == 'POST':
         try:
-            # Parseamos el JSON que nos envía JavaScript
             datos = json.loads(request.body)
-            
-            # 1. Aquí recibiremos los metadatos de la factura
-            numero_factura = datos.get('invoice_number')
-            emisor_name = datos.get('emisor_name')
-            cobrar_a = datos.get('cobrar_a')  # Nombre o ID del cliente
-            fecha_emision = datos.get('date_issued')
-            fecha_vencimiento = datos.get('due_date')
-            condicion_pago = datos.get('payment_terms')
-            
-            # 2. Aquí recibiremos el array de productos agregados a la tabla
-            articulos = datos.get('articulos', [])
-
-            # --- Lógica de prueba para ver en la consola de Django ---
-            print("=== DATOS RECIBIDOS DESDE EL HTML ===")
-            print(f"Factura: {numero_factura} | Emisor: {emisor_name} | Cliente: {cobrar_a}")
-            print(f"Artículos recibidos: {len(articulos)}")
-            
-            # Respondemos un JSON de éxito al navegador
+            # (Aquí procesaremos el guardado en el siguiente bloque)
             return JsonResponse({
                 'status': 'success', 
-                'message': '¡Factura recibida correctamente en el backend!',
-                'redirect_url': '/facturas/nueva/' # Temporal, luego apuntará a la vista final
+                'message': '¡Factura recibida correctamente!'
             })
-            
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
-    # Si es GET, cargamos la página con los catálogos como antes
+    # Si es GET, cargamos la vista maestra
     context = {
         'productos': Producto.objects.all(),
         'clientes': Cliente.objects.all()
     }
     return render(request, 'layout/partials/single_page.html', context)
+
+
+# 2. SEGUNDA FUNCIÓN (¡Esta es la que te está faltando en el archivo!)
+def ver_factura_view(request, factura_id):
+    # Busca la factura por ID, si no existe lanza un error 404
+    factura = get_object_or_404(Factura, id=factura_id)
+    
+    context = {
+        'factura': factura
+    }
+    return render(request, 'layout/partials/factura.html', context)
