@@ -1,7 +1,4 @@
-{% extends 'layout/partials/header.html' %}
 {% load static %}
-
-{% block content %}
 
   <form class="invoice-form" method="post" novalidate>
     {% csrf_token %}
@@ -64,7 +61,3 @@
 
     <!-- Aquí seguirán los siguientes bloques (productos, resumen, acciones) -->
   </form>
-
-  {% endblock %}
-
-    
