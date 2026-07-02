@@ -4,53 +4,49 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/factura.css' %}">
 {% endblock %}
-{% block content %}
 
+{% block content %}
 <div class="factura">
 
-  <!-- Ribbon superior: INVOICE + logo -->
   <div class="ribbon">
     <span class="ribbon-tag">Invoice</span>
     <div class="logo-box">EX</div>
   </div>
 
-  <!-- Marca -->
   <div class="brand">
     <h1>EDELYX</h1>
     <p>Factura de servicios</p>
   </div>
 
-  <!-- N° Factura / Emisor / Factura para -->
   <div class="meta">
     <div class="folio-block">
       <label>N° de factura</label>
       <div class="folio-number">
-        <input class="value" type="text" id="folio" value="0042" />
+        <input class="value" type="text" id="folio" value="{{ factura.numero_factura }}" readonly />
         <div class="barcode" id="barcode"></div>
       </div>
       <div class="field" style="margin-top:0.6rem;">
         <label>Fecha</label>
-        <input type="text" id="fecha" placeholder="DD / MM / AAAA" />
+        <input type="text" id="fecha" value="{{ factura.fecha_emision|date:'d / m / Y' }}" readonly />
       </div>
     </div>
 
     <div class="field-group">
       <div class="field">
         <label>Emisor</label>
-        <input type="text" id="emisor" placeholder="Nombre del emisor" />
+        <input type="text" id="emisor" value="EDELYX" readonly />
       </div>
       <div class="field">
         <label>Factura para</label>
-        <input type="text" id="cliente" placeholder="Nombre del cliente" />
+        <input type="text" id="cliente" value="{{ factura.cliente.nombre }}" readonly />
       </div>
     </div>
   </div>
 
-  <!-- Resumen: tabla de artículos -->
   <div class="resumen">
     <div class="resumen-head">
       <h2>Resumen</h2>
-      <span id="itemCount">3 artículos</span>
+      <span id="itemCount">{{ factura.detallefactura_set.count }} artículos</span>
     </div>
     <table class="items">
       <thead>
@@ -62,45 +58,56 @@
         </tr>
       </thead>
       <tbody id="itemsBody">
+        {% for detalle in factura.detallefactura_set.all %}
+        <tr>
+          <td>{{ detalle.producto.nombre }}</td>
+          <td class="col-qty">{{ detalle.cantidad }}</td>
+          <td class="col-price">${{ detalle.precio_unitario }}</td>
+          <td class="col-sub row-subtotal">${{ detalle.subtotal }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" style="text-align: center; color: var(--color-muted);">No hay artículos en esta factura.</td>
+        </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>
 
-  <!-- Términos y totales -->
-  <div class="lower">
-    <div class="terminos">
+  <div class="condiciones-totales" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); margin-top: var(--gap);">
+    <div class="notes">
       <h3>Términos y condiciones</h3>
-      <textarea id="terminos" placeholder="El pago debe realizarse dentro de los 15 días posteriores a la emisión de esta factura...">El pago debe realizarse dentro de los 15 días posteriores a la emisión de esta factura. Los pagos tardíos podrán generar un recargo del 2% mensual.</textarea>
+      <textarea id="terminos" readonly>Condición de pago: {{ factura.condicion_pago }}. El pago debe realizarse dentro de los términos establecidos. Los pagos tardíos podrán generar recargos.</textarea>
     </div>
 
     <div class="totales">
       <div class="tax-inputs">
         <div class="field">
           <label>Impuesto (%)</label>
-          <input type="number" id="taxRate" value="16" min="0" step="0.01" />
+          <input type="number" id="taxRate" value="{{ factura.porcentaje_impuesto }}" readonly />
         </div>
         <div class="field">
           <label>Descuento ($)</label>
-          <input type="number" id="discount" value="0" min="0" step="0.01" />
+          <input type="number" id="discount" value="{{ factura.descuento }}" readonly />
         </div>
       </div>
 
       <div class="totales-list">
         <div class="totales-row">
           <span class="label">Subtotal</span>
-          <span class="amount" id="subtotalOut">$0.00</span>
+          <span class="amount" id="subtotalOut">${{ factura.subtotal }}</span>
         </div>
         <div class="totales-row">
           <span class="label">Impuesto</span>
-          <span class="amount" id="taxOut">$0.00</span>
+          <span class="amount" id="taxOut">${{ factura.total_impuestos }}</span>
         </div>
         <div class="totales-row">
           <span class="label">Descuento</span>
-          <span class="amount" id="discountOut">$0.00</span>
+          <span class="amount" id="discountOut">${{ factura.descuento }}</span>
         </div>
         <div class="totales-row total">
-          <span class="label">Total <span class="chev">&lt;&lt;&lt;</span></span>
-          <span class="amount" id="totalOut">$0.00</span>
+          <span class="label">Total</span>
+          <span class="amount" id="totalOut">${{ "../../" }}${{ factura.total }}</span>
         </div>
       </div>
     </div>

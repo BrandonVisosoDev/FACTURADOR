@@ -335,6 +335,7 @@ async function enviarFactura() {
             alert(result.message);
             console.log("Éxito:", result);
             // Aquí en un futuro agregaremos: window.location.href = result.redirect_url;
+            window.location.href = '/facturas/ver/' + result.factura_id + '/';
         } else {
             alert("Error al guardar: " + result.message);
         }
