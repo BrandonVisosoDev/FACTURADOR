@@ -187,8 +187,7 @@ const btnMostrarResumen = document.getElementById('btn-mostrar-resumen');
 const resumenTabla = document.getElementById('resumen-tabla');
 const resumenBody = document.getElementById('resumen-body');
 
-btnMostrarResumen.addEventListener('click', function() {
-
+function generarResumen() {
     // 2.1 - Validación: ¿Hay productos agregados?
     if (listaArticulos.length === 0) {
         alert("Primero agrega al menos un producto a la tabla.");
@@ -228,7 +227,17 @@ btnMostrarResumen.addEventListener('click', function() {
     document.getElementById('total-sub').textContent = `$${subtotal.toFixed(2)}`;
     document.getElementById('total-imp').textContent = `$${totalImpuestos.toFixed(2)}`;
     document.getElementById('total-amount').textContent = `$${total.toFixed(2)}`;
-});
+
+    // 2.7 - Persistencia: Marcamos que el resumen está visible
+    localStorage.setItem('facturador_resumen_visible', 'true');
+}
+
+btnMostrarResumen.addEventListener('click', generarResumen);
+
+// Si el resumen estaba visible antes de recargar la página y hay artículos, lo volvemos a generar
+if (localStorage.getItem('facturador_resumen_visible') === 'true' && listaArticulos.length > 0) {
+    generarResumen();
+}
 
 
 // =====================================================================
@@ -275,6 +284,9 @@ btnLimpiar.addEventListener('click', function() {
     document.getElementById('total-sub').textContent = '0.00';
     document.getElementById('total-imp').textContent = '0.00';
     document.getElementById('total-amount').textContent = '0.00';
+
+    // Persistencia: Marcamos que el resumen ya no está visible
+    localStorage.setItem('facturador_resumen_visible', 'false');
 
     // Guardamos el estado limpio en localStorage (preservando contadorId)
     guardarEnStorage();
