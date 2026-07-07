@@ -29,6 +29,9 @@
     padding: 3.2rem 1.5rem;
     display:flex;
     justify-content:center;
+    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
     line-height: 1.5;
   }
 
@@ -330,6 +333,34 @@
   }
 
   @media print{
-    body{ background: #fff; padding:0; }
-    .factura{ border:none; }
+    body{ background: #fff; padding:0; display: block; min-height: auto; }
+    .factura{ border:none; margin: 0; box-shadow: none; height: fit-content; }
+    .no-print { display: none !important; }
+  }
+
+  /* ===== Volver Button ===== */
+  .btn-volver-container {
+    width: 100%;
+    max-width: var(--max-width);
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+  .btn-volver {
+    background: var(--color-inputs);
+    color: var(--color-texto);
+    border: 1px solid var(--color-border);
+    padding: 0.8rem 2rem;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .btn-volver:hover {
+    background: var(--color-accent);
+    color: #fff;
+    border-color: var(--color-accent);
   }

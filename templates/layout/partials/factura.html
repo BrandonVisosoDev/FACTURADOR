@@ -62,8 +62,8 @@
         <tr>
           <td>{{ detalle.producto.nombre }}</td>
           <td class="col-qty">{{ detalle.cantidad }}</td>
-          <td class="col-price">${{ detalle.precio_unitario }}</td>
-          <td class="col-sub row-subtotal">${{ detalle.subtotal }}</td>
+          <td class="col-price">${{ detalle.precio_unitario|floatformat:2 }}</td>
+          <td class="col-sub row-subtotal">${{ detalle.subtotal|floatformat:2 }}</td>
         </tr>
         {% empty %}
         <tr>
@@ -95,24 +95,28 @@
       <div class="totales-list">
         <div class="totales-row">
           <span class="label">Subtotal</span>
-          <span class="amount" id="subtotalOut">${{ factura.subtotal }}</span>
+          <span class="amount" id="subtotalOut">${{ factura.subtotal|floatformat:2 }}</span>
         </div>
         <div class="totales-row">
           <span class="label">Impuesto</span>
-          <span class="amount" id="taxOut">${{ factura.total_impuestos }}</span>
+          <span class="amount" id="taxOut">${{ factura.total_impuestos|floatformat:2 }}</span>
         </div>
         <div class="totales-row">
           <span class="label">Descuento</span>
-          <span class="amount" id="discountOut">${{ factura.descuento }}</span>
+          <span class="amount" id="discountOut">${{ factura.descuento|floatformat:2 }}</span>
         </div>
         <div class="totales-row total">
           <span class="label">Total</span>
-          <span class="amount" id="totalOut">${{ factura.total }}</span>
+          <span class="amount" id="totalOut">${{ factura.total|floatformat:2 }}</span>
         </div>
       </div>
     </div>
   </div>
 
+</div>
+
+<div class="btn-volver-container no-print">
+  <button class="btn-volver" onclick="window.location.href='/'">Volver</button>
 </div>
 
 {% if es_impresion %}
